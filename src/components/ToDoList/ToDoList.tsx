@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-
+import ToDoListElement from "./ToDoListElement";
 type ListElement={
     name:string,
     desc:string;
@@ -9,12 +9,30 @@ const ToDoList = () => {
     const [desc,setDesc]= useState('')
 
     const [List,setList]=useState<ListElement[]>([])
-    const AddElement=()=>{
-        setList([{
-            name:name,
+    const AddElement = () => {
+        const newList = [...List, {
+            name: name,
             desc:desc
-        }])
+        }]
+        setList(newList)
+
+        setName('')
+        setDesc('')
+
+        //setList([{
+        //    name:name,
+        //    desc:desc
+        //}])
     }
+
+
+    const DeleteElement = (index: number) => {
+        const filter = List.filter((el, i) => i != index)
+
+        setList(filter);
+    }
+
+
     return (
         <div>
             <input type="text" placeholder={"name"}
@@ -25,9 +43,19 @@ const ToDoList = () => {
                    value={desc}
                    onChange={(e)=>setDesc(e.target.value)}
             />
+
             <div>
             <button onClick={()=>AddElement()}>add in list</button>
-        </div>
+            </div>
+
+            <div>
+                {List.map((el, i) => <ToDoListElement
+                    name={el.name}
+                    desc={el.desc}
+                    onDeleteClick={() => DeleteElement(i)}
+                   />
+                    )}
+                </div>
         </div>
     );
 };
